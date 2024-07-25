@@ -87,24 +87,31 @@ Your task is to evaluate the resume against the provided job description. Give m
 the job description. First, the output should come as a percentage, then keywords missing, and lastly, final thoughts.
 """
 
+def validate_job_description(job_description):
+    return bool(job_description.strip())
+
 if submit1:
-    if uploaded_files:
+    if uploaded_files and validate_job_description(input_text):
         st.subheader("Analysis of Resumes")
         for resume_name, resume_text in resumes.items():
             response = get_gemini_response(input_text, resume_text, input_prompt1)
             st.write(f"Resume: {resume_name}")
             st.write(response)
+    else:
+        st.write("Please provide a valid job description and upload resumes.")
 
 if submit2:
-    if uploaded_files:
+    if uploaded_files and validate_job_description(input_text):
         results = process_all_resumes(resumes, input_text)
         st.subheader("Match Percentages for All Resumes")
         for candidate, result in results.items():
             percentage = extract_percentage(result)
             st.write(f"{candidate}: {percentage}%")
+    else:
+        st.write("Please provide a valid job description and upload resumes.")
 
 if submit3:
-    if uploaded_files:
+    if uploaded_files and validate_job_description(input_text):
         results = process_all_resumes(resumes, input_text)
         best_candidate, best_score = pick_best_candidate(results)
         if best_candidate:
@@ -113,9 +120,11 @@ if submit3:
             st.write(f"Match Percentage: {best_score}%")
         else:
             st.write("No candidate found with a match percentage.")
+    else:
+        st.write("Please provide a valid job description and upload resumes.")
 
 if submit4:
-    if uploaded_files:
+    if uploaded_files and validate_job_description(input_text):
         results = process_all_resumes(resumes, input_text)
         total_resumes = len(results)
         scores = [extract_percentage(result) for result in results.values()]
@@ -125,3 +134,5 @@ if submit4:
         st.write(f"Total Resumes Analyzed: {total_resumes}")
         st.write(f"Highest Match Percentage: {highest_score}%")
         st.write(f"Average Match Percentage: {average_score}%")
+    else:
+        st.write("Please provide a valid job description and upload resumes.")
